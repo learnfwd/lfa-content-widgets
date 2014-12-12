@@ -1,0 +1,63 @@
+mixin lgallery()
+  .gallery
+    - var arg = arguments
+    - if (Object.prototype.toString.call(arg[0]) === '[object String]') {
+        a(href=arg[0], data-lightbox="Album")
+          img(src=arg[0])
+    - }
+    - else {
+      - if (Object.prototype.toString.call(arg[0]) === '[object Object]') {
+        a(href=arg[0].src, data-lightbox="Album", data-title=arg[0].title)
+          img(src=arg[0].tn)
+      - }
+    - }
+    - for (var i = 1; i < arg.length; i++) {
+      - if (Object.prototype.toString.call(arg[i]) === '[object String]') {
+          a(href=arg[i], data-lightbox="Album")
+      - }
+      - else {
+        - if (Object.prototype.toString.call(arg[i]) === '[object Object]') {
+            a(href=arg[i].src, data-lightbox="Album", data-title=arg[i].title)
+        - }
+      - }
+    - }
+
+mixin gallery() 
+  #kenburns-slideshow
+  #kenburns-description
+    #slide-title
+  - var arg = arguments;
+  - var imageLinks = [];
+  - var titleLinks = [];
+  
+  - for (var i = 0; i < arg.length; i++) {
+    - if (typeof arg[i] === 'string') {
+      - imageLinks.push(arg[i]);
+      - titleLinks.push(null);
+    - }
+    - else {
+      - if (typeof arg[i] === 'object' && arg[i]) {
+        - imageLinks.push(arg[i].src);
+        - titleLinks[i] = arg[i].title;
+      - } else {
+        - throw new Error('invalid argumets for Ken Burns widget', arguments)
+      - }
+    - }
+  - }
+  - imageLinks = JSON.stringify(imageLinks);
+  - titleLinks = JSON.stringify(titleLinks)
+  
+  script.
+    var imageLinks = JSON.parse('!{imageLinks}');
+    var titles = JSON.parse('!{titleLinks}');
+    console.log(titles);
+    $('#kenburns-slideshow').Kenburns({
+      images: imageLinks,
+      scale:0.75,
+      duration:8000,
+      fadeSpeed:1200,
+      ease3d:'cubic-bezier(0.445, 0.050, 0.550, 0.950)',
+      onSlideComplete: function(){
+        $('#slide-title').html(titles[this.getSlideIndex()]);
+      }
+    });  
