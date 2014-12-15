@@ -1,35 +1,71 @@
-+article("Chapter 1")
-  +section("Intro")
-    h1 Chapter 1
++article("Gallery Mixins")
+  +section("Gallery Types")
+    :markdown
+      # Gallery Mixins
+      You can create 2 types of galleries:
+      * A lightbox gallery.
+      * A gallery powered by the Ken Burns effect.
+      
+      A gallery can be created by calling `+gallery`, for the lightbox version, or `+kenburns`, for the other version.
+      
+      Both versions support as arguments: `strings`, representing the location of the image, or `JSONs`, describing the image. The `JSONs` must have a `src` property, which is the actual location of the image and optional properties like `tn` which is thumbnail location for the lightbox gallery, or `title`.
+      
+      For example, the lightbox gallery: 
+      
     +gallery({
       'src': 'http://placekitten.com/g/1200/1200',
       'tn': 'http://placekitten.com/g/300/300',
-      'title': 'mâță'
+      'title': 'Some Cat'
     },
     './img/kitten.jpg',
     './img/kitten.jpg',
     './img/kitten.jpg',
     {
     'src': 'http://placekitten.com/g/1200/1200',
-    'tn': 'http://placekitten.com/g/300/300',
-    'title': 'mâțăPeLaMijloc'
+    'title': 'Some Other Cat'
     },
     './img/kitten.jpg',
     './img/kitten.jpg'
     )
-
-    p Looks like everything is working! You can edit this file in text/ch01/00.jade.
-
-    p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    pre.
+    
+    
+    :markdown
+      The gallery above can be generated with the fallowing code:
+      ```
       +gallery({
-      'src': 'http://placekitten.com/g/1200/1200',
-      'tn': 'http://placekitten.com/g/300/300',
-      'title': 'mâță'
+        'src': 'http://placekitten.com/g/1200/1200',
+        'tn': 'http://placekitten.com/g/300/300',
+        'title': 'Some Cat'
       },
       './img/kitten.jpg',
       './img/kitten.jpg',
       './img/kitten.jpg',
+      {
+        'src': 'http://placekitten.com/g/1200/1200',
+        'title': 'Some Other Cat'
+      },
+      './img/kitten.jpg',
       './img/kitten.jpg'
       )
+      ```
+      
+      As you can see, the arguments are mixed, it doesn't matter in which order you pass them. If you want to add a `title` to you image, you must pass a `JSON`, otherwise a simple string is fairly enough.
+      
+      The same rules apply for the `+kenburns` gallery:
+
+    +kenburns({
+      'src': 'http://placekitten.com/g/1200/1200',
+      'tn': 'http://placekitten.com/g/300/300',
+      'title': 'Some Cat'
+    },
+    './img/kitten.jpg',
+    './img/kitten.jpg',
+    './img/kitten.jpg',
+    {
+      'src': 'http://placekitten.com/g/1200/1200',
+      'title': 'Some Other Cat'
+    },
+    './img/kitten.jpg',
+    './img/kitten.jpg'
+    )
       
