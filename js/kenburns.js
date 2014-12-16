@@ -21,7 +21,7 @@
  *
 */
 define(function() {
-  ;(function ( $, window, document, undefined ) {
+  (function ( $, window, document, undefined ) {
 
       /*  Plugin Parameters
       ------------------------------------------------------------------------------------------------- */
@@ -30,7 +30,7 @@ define(function() {
               images:[],
               duration:400,
               fadeSpeed:500,
-              scale:1,
+              scale:1.2,
               ease3d:'cubic-bezier(.81, 0, .26, 1)',
               onLoadingComplete:function(){},
               onSlideComplete:function(){},
@@ -68,12 +68,12 @@ define(function() {
           this.width = $(this.element).width();
           this.height = $(this.element).height();
 
-          this.has3d = has3DTransforms();
+          // this.has3d = has3DTransforms();
 
           for (i in list) {
               imagesObj["image"+i] = {};
               imagesObj["image"+i].loaded = false;
-          	this.attachImage(list[i], "image"+i , i);
+            this.attachImage(list[i], "image" + i , i);
 
           }
 
@@ -103,32 +103,30 @@ define(function() {
           wrapper.attr('class','kb-slide');
           wrapper.css({'opacity':0});
 
-  		var img = $("<img />");
-  		img.attr('src', url);
-  		img.attr('alt', alt_text);
+      var img = $("<img />");
+      img.attr('src', url);
+      img.attr('alt', alt_text);
 
           wrapper.html(img);
 
           //First check if the browser supports 3D transitions, initialize the CSS accordingly
-          if(this.has3d) {
-              img.css({'-webkit-transform-origin':'left top'});
-              img.css({'-moz-transform-origin':'left top'});
-              img.css({'-webkit-transform':'scale('+that.options.scale+') translate3d(0,0,0)'});
-              img.css({'-moz-transform':'scale('+that.options.scale+') translate3d(0,0,0)'});
-          }
+          img.css({'-ms-transform-origin':'left top'});
+          img.css({'-webkit-transform-origin':'left top'});
+          img.css({'-ms-transform':'scale('+that.options.scale+') translate3d(0,0,0)'});
+          img.css({'-webkit-transform':'scale('+that.options.scale+') translate3d(0,0,0)'});
 
           //Switch the transition to the 3d version if it does exist
-          this.doTransition = (this.has3d)?this.transition3d:this.transition;
+          this.doTransition = this.transition3d;
 
 
           //set up the image OBJ parameters - used to track loading and initial dimensions
           img.load(function() {
-          	imagesObj["image"+index].element = this;
-          	imagesObj["image"+index].loaded  = true;
-              imagesObj["image"+index].width = $(this).width();
-              imagesObj["image"+index].width = $(this).height();
-              that.insertAt(index,wrapper);
-              that.resume(index);
+            imagesObj["image"+index].element = this;
+            imagesObj["image"+index].loaded  = true;
+            imagesObj["image"+index].width = $(this).width();
+            imagesObj["image"+index].width = $(this).height();
+            that.insertAt(index,wrapper);
+            that.resume(index);
   		});
 
   	}
@@ -157,7 +155,7 @@ define(function() {
           }
 
           //if the last image in the set has loaded, add the images in order
-          if(this.checkLoadProgress() == true) {
+          if(this.checkLoadProgress() === true) {
               //reset the opacities and z indexes except the last and first images
               $(this.element).find('.stalled').each(function(){
                   $(this).css({'opacity':1,'z-index':1});
@@ -173,7 +171,7 @@ define(function() {
       Plugin.prototype.checkLoadProgress = function() {
           var imagesLoaded = true;
            for(i=0;i<this.maxSlides;i++){
-              if (imagesObj["image"+i].loaded == false){
+              if (imagesObj["image"+i].loaded === false){
                   imagesLoaded = false;
               }
           }
@@ -221,7 +219,7 @@ define(function() {
               }
 
               //Check if the next slide is loaded. If not, wait.
-              if(imagesObj["image"+currentSlide].loaded == false){
+              if(imagesObj["image"+currentSlide].loaded === false){
                   that.holdup = currentSlide;
                   that.wait();
 
@@ -270,18 +268,19 @@ define(function() {
 
           //Pick the second corner from the subset
           corners.splice(choice,1);
+          // console.log('cornerSplice', corners.splice(choice,1));
           var end = corners[Math.floor(Math.random()*3)];
 
           //build the new coordinates from the chosen coordinates
           var coordinates = {
-              startX: start.x * (w - sw*scale) ,
-              startY: start.y * (h - sh*scale),
+              startX: start.x * (sw*scale - w) ,
+              startY: start.y * (sw*scale - h),
               endX: end.x * (w - sw),
               endY: end.y * (h - sh)
           }
 
         //
-        //  console.log(coordinates.startX + " , "+coordinates.startY + " , " +coordinates.endX + " , " +coordinates.endY);
+         console.log(coordinates.startX + " , "+coordinates.startY + " : " +coordinates.endX + " , " +coordinates.endY);
 
           return coordinates;
       }
@@ -304,51 +303,22 @@ define(function() {
 
 
           //First clear any existing transition
+          $(image).css({'-ms-transition':'none'});
           $(image).css({'-webkit-transition':'none'});
-          $(image).css({'-moz-transition':'none'});
-          $(image).css({'-webkit-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0)'});
-          $(image).css({'-moz-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0)'});
+          $(image).css({'-ms-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0px)'});
+          $(image).css({'-webkit-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0px)'});
 
           //Set the wrapper to fully transparent and start it's animation
           $(image).parent().css({'opacity':0,'z-index':'3'});
           $(image).parent().animate({'opacity':1},that.options.fadeSpeed);
 
           //Add the transition back in
+          $(image).css({'-ms-transition':'-ms-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
           $(image).css({'-webkit-transition':'-webkit-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
-          $(image).css({'-moz-transition':'-moz-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
 
           //set the end position and scale, which fires the transition
-          $(image).css({'-webkit-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0)'});
-          $(image).css({'-moz-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0)'});
-
-          this.transitionOut();
-          this.options.onSlideComplete();
-      }
-
-
-
-      /**
-       *  Transition
-       *  The regular JQuery animation function. Sets the currentSlide initial scale and position to
-       *  the value from chooseCorner before triggering the animation. It starts the image moving to
-       *  the new position, starts the fade on the wrapper, and delays the fade out animation. Adding
-       *  fadeSpeed to duration gave me a nice crossfade so the image continues to move as it fades out
-       *  rather than just stopping.
-       */
-
-      Plugin.prototype.transition = function() {
-          var that  = this;
-          var scale = this.options.scale;
-          var image = imagesObj["image"+currentSlide].element;
-          var sw = $(image).width();
-          var sh = $(image).height();
-          var position = this.chooseCorner();
-
-          $(image).css({'left':position.startX,'top':position.startY,'width':sw*(scale),'height':sh*(scale)});
-          $(image).animate({'left':position.endX,'top':position.endY,'width':sw,'height':sh}, that.options.duration + that.options.fadeSpeed);
-
-          $(image).parent().css({'opacity':0,'z-index':3});
-          $(image).parent().animate({'opacity':1},that.options.fadeSpeed);
+          $(image).css({'-ms-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0px)'});
+          $(image).css({'-webkit-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0px)'});
 
           this.transitionOut();
           this.options.onSlideComplete();
@@ -373,26 +343,26 @@ define(function() {
        *  Creates an element, translates the element, and tests the values. If the
        *  values return true, the browser supports 3D transformations.
        */
-      function has3DTransforms() {
-          var el = document.createElement('p'),
-              has3d,
-              transforms = {
-                  'WebkitTransform':'-webkit-transform',
-                  'MozTransform':'-moz-transform',
-              };
-
-          document.body.insertBefore(el, null);
-
-          for (var t in transforms) {
-              if (el.style[t] !== undefined) {
-                  el.style[t] = "translate3d(1px,1px,1px)";
-                  has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
-              }
-          }
-
-          document.body.removeChild(el);
-          return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
-      }
+      // function has3DTransforms() {
+      //     var el = document.createElement('p'),
+      //         has3d,
+      //         transforms = {
+      //             'MsTransform':'-ms-transform',
+      //             'WebkitTransform':'-webkit-transform'
+      //         };
+      //
+      //     document.body.insertBefore(el, null);
+      //
+      //     for (var t in transforms) {
+      //         if (el.style[t] !== undefined) {
+      //             el.style[t] = "translate3d(1px,1px,1px)";
+      //             has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+      //         }
+      //     }
+      //
+      //     document.body.removeChild(el);
+      //     return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+      // }
 
       /**
        *  insertAt
