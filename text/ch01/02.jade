@@ -1,5 +1,19 @@
-+article("Chapter 1.2")
-  +section("Intro")
-    h1 Chapter 1.2
-
-    p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++article("UI Effects")
+  +section("Parallax")
+    
+    
+    :markdown
+      #Parallax Effect
+      
+      While reading the lfa backends, I found that the `+parallax(path)` was already implemented in the `LFA` core, but for the sake of consistency, I transffered it here and wrote this page.
+      
+    +parallax('http://placekitten.com/g/1200/1200')
+      h1 Hello Kitty!
+      
+    
+    :markdown
+       To use it you have to call `+parallax()' add the path.
+       
+       ```
+       +parallax('/path/to/local/or/online/image/')
+       ```

@@ -99,3 +99,8 @@ mixin tooltip()
     - };
     script.
       $('.trigger').popover();
+      
+mixin parallax(path)
+  .parallax(style="background-image: url('#{path}')")
+    if block
+      block
