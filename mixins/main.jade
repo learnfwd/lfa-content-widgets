@@ -48,15 +48,14 @@ mixin kenburns()
       - }
     - }
     - imageLinks = JSON.stringify(imageLinks);
-    - titleLinks = JSON.stringify(titleLinks)
+    - titleLinks = JSON.stringify(titleLinks);
     
     script.
       var imageLinks = JSON.parse('!{imageLinks}');
       var titles = JSON.parse('!{titleLinks}');
-      console.log(titles);
       $('#kenburns-slideshow').Kenburns({
         images: imageLinks,
-        scale: 0.75,
+        scale: 1,
         duration:8000,
         fadeSpeed:1200,
         ease3d:'cubic-bezier(0.445, 0.050, 0.550, 0.950)',
@@ -64,3 +63,39 @@ mixin kenburns()
           $('#slide-title').html(titles[this.getSlideIndex()]);
         }
       });  
+
+mixin tooltip() 
+  #tooltip-wrapper
+    if (block)
+      .img-wrapper
+        block
+    - var arg = arguments;
+    - for (var i = 0; i < arg.length; i++) {
+      - var cssToLoad = {};
+      - var style = [];
+      - arg[i].top ? cssToLoad.top = arg[i].top : '';
+      - arg[i].bottom ? cssToLoad.bottom = arg[i].bottom : '';
+      - arg[i].left ? cssToLoad.left = arg[i].left : '';
+      - arg[i].right ? cssToLoad.right = arg[i].right : '';
+      - for (entry in cssToLoad) {
+          - style.push(entry + ':' + cssToLoad[entry]);
+      - };
+      - style.push('-webkit-transform:translate(-' + ((cssToLoad.top) || (cssToLoad.bottom)) + ',-' + ((cssToLoad.left) || (cssToLoad.right)) + ')');
+      
+      span.trigger(  
+        class = 'trigger-' + i,  
+        role = 'button', 
+        data-toggle = 'popover', 
+        data-html = true,
+        data-template = arg[i].template ? arg[i].template : '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+        data-trigger = arg[i].trigger ? arg[i].trigger : 'click', 
+        data-placement = arg[i].placement ? arg[i].placement : 'auto',
+        title = arg[i].title ? arg[i].title : 'Title is missing!', 
+        data-content = arg[i].content ? arg[i].content : 'Content is missing!',
+        style = style.join(';')
+      )
+        - var symbol = arg[i].symbol || 'cricle-o'
+        i.fa(class ='fa-' + symbol, class= arg[i].large ? 'fa-2x' : 'normal')
+    - };
+    script.
+      $('.trigger').popover();

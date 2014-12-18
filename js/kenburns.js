@@ -30,7 +30,7 @@ define(function() {
               images:[],
               duration:400,
               fadeSpeed:500,
-              scale:1.2,
+              scale:1,
               ease3d:'cubic-bezier(.81, 0, .26, 1)',
               onLoadingComplete:function(){},
               onSlideComplete:function(){},
@@ -112,7 +112,7 @@ define(function() {
           //First check if the browser supports 3D transitions, initialize the CSS accordingly
           img.css({'-ms-transform-origin':'left top'});
           img.css({'-webkit-transform-origin':'left top'});
-          img.css({'-ms-transform':'scale('+that.options.scale+') translate3d(0,0,0)'});
+          img.css({'-ms-transform':'-ms-scale('+that.options.scale+') translate3d(0,0,0)'});
           img.css({'-webkit-transform':'scale('+that.options.scale+') translate3d(0,0,0)'});
 
           //Switch the transition to the 3d version if it does exist
@@ -155,7 +155,7 @@ define(function() {
           }
 
           //if the last image in the set has loaded, add the images in order
-          if(this.checkLoadProgress() === true) {
+          if(this.checkLoadProgress() == true) {
               //reset the opacities and z indexes except the last and first images
               $(this.element).find('.stalled').each(function(){
                   $(this).css({'opacity':1,'z-index':1});
@@ -169,13 +169,13 @@ define(function() {
 
       //if any of the slides are not loaded, the set has not finished loading.
       Plugin.prototype.checkLoadProgress = function() {
-          var imagesLoaded = true;
-           for(i=0;i<this.maxSlides;i++){
-              if (imagesObj["image"+i].loaded === false){
-                  imagesLoaded = false;
-              }
-          }
-          return imagesLoaded;
+        var imagesLoaded = true;
+         for(i=0;i<this.maxSlides;i++){
+            if (imagesObj["image"+i].loaded == false){
+                imagesLoaded = false;
+            }
+        }
+        return imagesLoaded;
       }
 
       /**
@@ -219,7 +219,7 @@ define(function() {
               }
 
               //Check if the next slide is loaded. If not, wait.
-              if(imagesObj["image"+currentSlide].loaded === false){
+              if(imagesObj["image"+currentSlide].loaded == false){
                   that.holdup = currentSlide;
                   that.wait();
 
@@ -240,49 +240,46 @@ define(function() {
       */
 
       Plugin.prototype.chooseCorner = function() {
-          var scale = this.options.scale;
-          var image = imagesObj["image"+currentSlide].element;
+        var scale = this.options.scale;
+        var image = imagesObj["image"+currentSlide].element;
 
-          var ratio = image.height/image.width;
-          var sw = Math.floor($(this.element).width()*(1/scale));
-          var sh = Math.floor($(this.element).width()*ratio*(1/scale));
+        var ratio = image.height/image.width;
+        var sw = Math.floor($(this.element).width()*(1/scale));
+        var sh = Math.floor($(this.element).width()*ratio*(1/scale));
+        $(image).width(sw);
+        $(image).height(sh);
 
-          $(image).width(sw);
-          $(image).height(sh);
+        var w = $(this.element).width();
+        var h = $(this.element).height();
 
-          var w = $(this.element).width();
-          var h = $(this.element).height();
+        //console.log(sw+ ", " + this.width);
 
-          //console.log(sw+ ", " + this.width);
+        var corners = [
+            {x:0,y:0},
+            {x:1,y:0},
+            {x:0,y:1},
+            {x:1,y:1}
+        ];
 
-          var corners = [
-              {x:0,y:0},
-              {x:1,y:0},
-              {x:0,y:1},
-              {x:1,y:1}
-          ];
+        //Pick the first corner. Remove it from the array
+        var choice = Math.floor(Math.random() * corners.length);
+        var start = corners[choice];
 
-          //Pick the first corner. Remove it from the array
-          var choice = Math.floor(Math.random()*4);
-          var start = corners[choice];
+        //Pick the second corner from the subset
+        corners.splice(choice, 1);
+        var end = corners[Math.floor(Math.random() * corners.length)];
 
-          //Pick the second corner from the subset
-          corners.splice(choice,1);
-          // console.log('cornerSplice', corners.splice(choice,1));
-          var end = corners[Math.floor(Math.random()*3)];
+        //build the new coordinates from the chosen coordinates
+        var coordinates = {
+            startX: start.x * (w - sw*scale),
+            startY: start.y * (h - sh*scale),
+            endX: end.x * (w - sw),
+            endY: end.y * (h - sh)
+        }
 
-          //build the new coordinates from the chosen coordinates
-          var coordinates = {
-              startX: start.x * (sw*scale - w) ,
-              startY: start.y * (sw*scale - h),
-              endX: end.x * (w - sw),
-              endY: end.y * (h - sh)
-          }
+      // console.log(coordinates.startX + " , "+coordinates.startY + " : " +coordinates.endX + " , " +coordinates.endY);
 
-        //
-         console.log(coordinates.startX + " , "+coordinates.startY + " : " +coordinates.endX + " , " +coordinates.endY);
-
-          return coordinates;
+        return coordinates;
       }
 
 
@@ -296,33 +293,45 @@ define(function() {
       */
 
       Plugin.prototype.transition3d = function () {
-          var that  = this;
-          var scale = this.options.scale;
-          var image = imagesObj["image"+currentSlide].element;
-          var position = this.chooseCorner();
+
+        var that  = this;
+        var scale = this.options.scale;
+        var image = imagesObj["image"+currentSlide].element;
+        var position = this.chooseCorner();
 
 
-          //First clear any existing transition
-          $(image).css({'-ms-transition':'none'});
-          $(image).css({'-webkit-transition':'none'});
-          $(image).css({'-ms-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0px)'});
-          $(image).css({'-webkit-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0px)'});
+        //First clear any existing transition
+        $(image).css({'-ms-transition':'none'});
+        $(image).css({'-webkit-transition':'none'});
+        $(image).css({'-ms-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0)'});
+        $(image).css({'-webkit-transform':'scale('+scale+') translate3d('+position.startX+'px,'+position.startY+'px,0)'});
 
-          //Set the wrapper to fully transparent and start it's animation
-          $(image).parent().css({'opacity':0,'z-index':'3'});
-          $(image).parent().animate({'opacity':1},that.options.fadeSpeed);
+        //Set the wrapper to fully transparent and start it's animation
+        $(image).parent().css({'opacity':0,'z-index':'3'});
+        $(image).parent().animate({'opacity':1},that.options.fadeSpeed);
 
-          //Add the transition back in
-          $(image).css({'-ms-transition':'-ms-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
-          $(image).css({'-webkit-transition':'-webkit-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
+        //Add the transition back in
+        $(image).css({'-ms-transition':'-ms-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
+        $(image).css({'-webkit-transition':'-webkit-transform '+(that.options.duration+that.options.fadeSpeed)+'ms '+that.options.ease3d});
 
-          //set the end position and scale, which fires the transition
-          $(image).css({'-ms-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0px)'});
-          $(image).css({'-webkit-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0px)'});
+        //set the end position and scale, which fires the transition
+        $(image).css({'-ms-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0)'});
+        $(image).css({'-webkit-transform':'scale(1) translate3d('+position.endX+'px,'+position.endY+'px,0)'});
 
-          this.transitionOut();
-          this.options.onSlideComplete();
+        this.transitionOut();
+        this.options.onSlideComplete();
       }
+
+
+
+      /**
+       *  Transition
+       *  The regular JQuery animation function. Sets the currentSlide initial scale and position to
+       *  the value from chooseCorner before triggering the animation. It starts the image moving to
+       *  the new position, starts the fade on the wrapper, and delays the fade out animation. Adding
+       *  fadeSpeed to duration gave me a nice crossfade so the image continues to move as it fades out
+       *  rather than just stopping.
+       */
 
       Plugin.prototype.transitionOut = function() {
           var that = this;

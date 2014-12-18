@@ -61,3 +61,23 @@
     './img/kitten.jpg'
     )
       
+    .row: .col-sm-4.col-sm-offset-3
+      +tooltip({
+        'title':'titlul',
+        'content': 'continut',
+        'top': '90%',
+        'left': '90%',
+        'symbol': 'circle-o',
+        'large': true,
+        'placement': 'top',
+        'trigger': 'hover'
+        },
+        {
+        'title':'titlul',
+        'content': "<iframe width='100%' height='auto' src='//www.youtube.com/embed/cAmvhNdDrk8' frameborder='0' allowfullscreen></iframe>",
+        'top': '50%',
+        'left': '50%',
+        'symbol': 'times',
+        'large': true
+        })
+          img(src='http://placekitten.com/g/500/500')
