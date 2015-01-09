@@ -104,3 +104,76 @@ mixin parallax(path)
   .parallax(style="background-image: url('#{path}')")
     if block
       block
+
+mixin hchart(options)
+  - var maxStep = options.maxSteps || 100
+  .hchart
+    each bar in options.bars
+      .row
+        .col-sm-3= bar.name
+        .col-sm-9
+          if (bar.stacked) 
+            
+            .hchart-row
+              .progress
+                - for (var i = 0; i < bar.data.length; i+=2) {
+                .progress-bar(role="progressbar", data-transitiongoal="#{((bar.data[i]* 100) / maxStep)}", style="background: #{bar.data[i+1]}")= bar.data[i]
+                - }
+          else
+            
+            .hchart-row
+              - for (var i = 0; i < bar.data.length; i+=2) {
+                .progress(style="margin-bottom: 0.1em")
+                  .progress-bar(role="progressbar", data-transitiongoal="#{((bar.data[i]* 100) / maxStep)}", style="background: #{bar.data[i+1]}")= bar.data[i]
+              - }
+    .row: .col-sm-9.col-sm-offset-3
+      if (options.step)
+        .hchart-step(style="position:relative; height: 3em")
+          - var steps = options.step
+          - for (var i = 0; i <= maxStep; i+=steps) {
+            .step(style="position: absolute; left: #{((i * 100) / maxStep)}%; text-align: center"): .small
+              div(style="text-align: center") |
+              div #{i}
+          - }
+      if (options.legend)
+        .hchart-legend: .text-center
+            each item in options.legend
+              .legend(style="width: 10px; height: 10px; background: #{item.color}; display: inline-block")
+              span(style="margin-left: 0.2em; margin-right: 1em")= item.name
+
+mixin vchart(options)
+  - var height = options.height || '200px';
+  - var width = options.width || '40px';
+  - var maxStep = options.maxSteps || 100;
+  .vchart(style="position: relative; margin: 2em 0")
+    .row
+      each bar, index in options.bars
+        .col-sm-4(style="margin: 2em 0")
+          if (options.step)
+            if (index % 3 == 0)
+              .hidden-xs(style="height: #{height}; width: 2em; position: absolute; top: 0; display: inline-block")
+                - var steps = options.step
+                - for (var i = 0; i <= maxStep; i+=steps) {
+                  .step(style="width: 100%; position: absolute; bottom: #{((i * 100) / maxStep)}%; border-bottom: 1px solid black;") 
+                    div #{i} 
+                - }
+          .vchart-section(style="height: #{height}; display: inline-block;margin-left: 2em;margin-bottom: 2em;")
+            if (options.step)
+              .vchart-step(style="height: 100%; width: 2em; position: relative; margin-left: 1em")
+                - var steps = options.step
+                - for (var i = 0; i <= maxStep; i+=steps) {
+                  .step(style="width: 100%; position: absolute; bottom: #{((i * 100) / maxStep)}%; border-bottom: 1px solid black;") #{i} 
+                - }
+            .vchart-chart(style="height: 100%; margin: 0 0.5em; display: inline-block;")
+              - for (var i = 0; i < bar.data.length; i+=2) {
+                .progress.vertical.bottom(style="margin: 0 0.1em; width: #{width}")
+                  .progress-bar(role="progressbar", data-transitiongoal="#{((bar.data[i]* 100) / maxStep)}", style="background: #{bar.data[i+1]}")= bar.data[i]
+              - }
+          .text-center.small= bar.name
+          hr.visible-xs
+    if (options.legend)
+      .row: .col-sm-9.col-sm-offset-3
+        .vchart-legend: .text-center
+          each item in options.legend
+            .legend(style="width: 10px; height: 10px; background: #{item.color}; display: inline-block")
+            span(style="margin-left: 0.2em; margin-right: 1em")= item.name
