@@ -146,11 +146,11 @@ mixin vchart(options)
   - var width = options.width || '40px';
   - var maxStep = options.maxSteps || 100;
   .vchart(style="position: relative; margin: 2em 0")
-    .row
+    .row-fluid
       each bar, index in options.bars
-        .col-sm-4(style="margin: 2em 0")
+        .col-sm-6(style="margin: 2em 0")
           if (options.step)
-            if (index % 3 == 0)
+            if (index % 2 == 0)
               .hidden-xs(style="height: #{height}; width: 2em; position: absolute; top: 0; display: inline-block")
                 - var steps = options.step
                 - for (var i = 0; i <= maxStep; i+=steps) {
