@@ -159,12 +159,12 @@ mixin vchart(options)
                 - }
           .vchart-section(style="height: #{height}; display: inline-block;margin-left: 2em;margin-bottom: 2em;")
             if (options.step)
-              .vchart-step(style="height: 100%; width: 2em; position: relative; margin-left: 1em")
+              .vchart-step(style="height: 100%; width: 2em; position: relative;")
                 - var steps = options.step
                 - for (var i = 0; i <= maxStep; i+=steps) {
                   .step(style="width: 100%; position: absolute; bottom: #{((i * 100) / maxStep)}%; border-bottom: 1px solid black;") #{i} 
                 - }
-            .vchart-chart(style="height: 100%; margin: 0 0.5em; display: inline-block;")
+            .vchart-chart(style="height: 100%; display: inline-block;")
               - for (var i = 0; i < bar.data.length; i+=2) {
                 .progress.vertical.bottom(style="margin: 0 0.1em; width: #{width}")
                   .progress-bar(role="progressbar", data-transitiongoal="#{((bar.data[i]* 100) / maxStep)}", style="background: #{bar.data[i+1]}")= bar.data[i]

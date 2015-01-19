@@ -136,10 +136,20 @@
   }
 }
 .vchart-step
+  margin-left: 1em
   @media(min-width: 765px)
     display: none
   @media(max-width: 764px)
     display: inline-block
+.vchart-chart
+  margin: 0 0.5em
+
+.vchart-section
+  @media(max-width: 348px)
+    .vchart-step
+      margin-left: 0
+    .vchart-chart
+      margin: 0
 
 .hchart .step
   transform: translate(-50%, 0)
