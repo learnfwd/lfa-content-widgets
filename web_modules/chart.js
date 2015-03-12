@@ -7,10 +7,10 @@
 * Licensed under the MIT license:
 * http://www.opensource.org/licenses/MIT
 */
-define(function () {
 
+var jQuery = require('jquery');
 
-	(function($) {
+(function($) {
 
 	'use strict';
 
@@ -164,5 +164,4 @@ define(function () {
 		return this;
 	};
 
-})(window.jQuery);
-});
+})(jQuery);
