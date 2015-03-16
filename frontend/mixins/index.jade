@@ -73,8 +73,8 @@ mixin tooltip()
       - };
       - style.push('-webkit-transform:translate(-' + ((cssToLoad.top) || (cssToLoad.bottom)) + ',-' + ((cssToLoad.left) || (cssToLoad.right)) + ')');
       
-      span.trigger(  
-        class = 'trigger-' + i,  
+      span.tooltip-trigger(  
+        class = 'tooltip-trigger-' + i,  
         role = 'button', 
         data-toggle = 'popover', 
         data-html = true,
@@ -83,6 +83,7 @@ mixin tooltip()
         data-placement = arg[i].placement ? arg[i].placement : 'auto',
         title = arg[i].title ? arg[i].title : 'Title is missing!', 
         data-content = arg[i].content ? arg[i].content : 'Content is missing!',
+        data-container = 'body',
         style = style.join(';')
       )
         - var symbol = arg[i].symbol || 'cricle-o'

@@ -24,24 +24,25 @@ App.book.on('render', function () {
     onScroll();
   }
 
-  $('.tooltip-wrapper .trigger').popover();
+  $('.tooltip-wrapper .tooltip-trigger').popover();
 
   var ken = $('.gallery-kenburns');
-  if (ken.length) {
-    var imageLinks = ken.data('imagelinks');
-    var titles = ken.data('titlelinks');
+  ken.each(function (idx, el) {
+    var $el = $(el);
+    var imageLinks = $el.data('imagelinks');
+    var titles = $el.data('titlelinks');
 
-    ken.find('.kenburns-slideshow').Kenburns({
+    $el.find('.kenburns-slideshow').Kenburns({
       images: imageLinks,
       scale: 1,
       duration:8000,
       fadeSpeed:1200,
       ease3d:'cubic-bezier(0.445, 0.050, 0.550, 0.950)',
       onSlideComplete: function(){
-        ken.find('.slide-title').html(titles[this.getSlideIndex()]);
+        $el.find('.slide-title').html(titles[this.getSlideIndex()]);
       }
     });  
-  }
+  })
 });
 
 // This should be replaced with static font assets
