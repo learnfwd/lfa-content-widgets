@@ -1,5 +1,5 @@
 var App = require('lfa-core/app');
-var $ = require('jquery');
+var $ = require('bootstrap');
 require('chart');
 require('viewport-selectors');
 require('kenburns');
