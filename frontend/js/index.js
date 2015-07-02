@@ -1,4 +1,4 @@
-var App = require('lfa-core/app');
+var App = require('lfa-core').App;
 var $ = require('bootstrap');
 require('chart');
 require('viewport-selectors');
@@ -42,7 +42,7 @@ App.book.on('render', function () {
         $el.find('.slide-title').html(titles[this.getSlideIndex()]);
       }
     });  
-  })
+  });
 });
 
 // This should be replaced with static font assets

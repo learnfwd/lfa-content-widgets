@@ -1,5 +1,10 @@
 {
   "name": "lfa-content-widgets",
+  "lfa": {
+    "dependencies": [
+      "lfa-core", "jquery", "bootstrap", "backbone", "react", "lodash"
+    ]
+  },
   "keywords": [
     "lfa-plugin"
   ]
